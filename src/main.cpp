@@ -1,10 +1,11 @@
 #include <iostream>
-#include <sstream>
 #include <vector>
 #include <string>
 #include <unistd.h>
-#include <sys/wait.h>
-#include <fcntl.h>
+
+#include "../include/parser.h"
+#include "../include/executor.h"
+#include "../include/pipe_executor.h"
 
 using namespace std;
 
@@ -15,25 +16,20 @@ int main() {
         cout << "mini-shell> ";
         getline(cin, line);
 
-        if (line.empty()) continue;
-
-        // 1. 分词
-        stringstream ss(line);
-        vector<string> tokens;
-        string token;
-
-        while (ss >> token) {
-            tokens.push_back(token);
+        if (cin.eof()) {
+            cout << endl;
+            break;
         }
 
+        if (line.empty()) continue;
+
+        vector<string> tokens = tokenize(line);
         if (tokens.empty()) continue;
 
-        // 2. 内建命令：exit
         if (tokens[0] == "exit") {
             break;
         }
 
-        // 3. 内建命令：cd
         if (tokens[0] == "cd") {
             if (tokens.size() < 2) {
                 cerr << "cd: missing argument" << endl;
@@ -45,77 +41,36 @@ int main() {
             continue;
         }
 
-        // 4. 检查是否有输出重定向 >
-        int redirect_index = -1;
+        int pipe_index = -1;
         for (int i = 0; i < (int)tokens.size(); i++) {
-            if (tokens[i] == ">") {
-                redirect_index = i;
+            if (tokens[i] == "|") {
+                pipe_index = i;
                 break;
             }
         }
 
-        // 5. 构造 execvp 参数
-        vector<char*> args;
+        if (pipe_index != -1) {
+            for (const auto& token : tokens) {
+                if (token == ">" || token == "<") {
+                    cerr << "syntax error: mixing | with < or > is not supported yet" << endl;
+                    pipe_index = -2;
+                    break;
+                }
+            }
 
-        if (redirect_index == -1) {
-            // 没有重定向：全部 tokens 都是命令参数
-            for (auto& t : tokens) {
-                args.push_back(&t[0]);
-            }
-        } else {
-            // 有重定向：只取 > 前面的部分作为命令参数
-            if (redirect_index == 0) {
-                cerr << "syntax error: no command before >" << endl;
-                continue;
-            }
-            if (redirect_index == (int)tokens.size() - 1) {
-                cerr << "syntax error: no output file after >" << endl;
+            if (pipe_index == -2) continue;
+
+            if (pipe_index == 0 || pipe_index == (int)tokens.size() - 1) {
+                cerr << "syntax error: invalid pipe usage" << endl;
                 continue;
             }
 
-            for (int i = 0; i < redirect_index; i++) {
-                args.push_back(&tokens[i][0]);
-            }
-        }
+            vector<string> left_tokens(tokens.begin(), tokens.begin() + pipe_index);
+            vector<string> right_tokens(tokens.begin() + pipe_index + 1, tokens.end());
 
-        args.push_back(nullptr);
-
-        // 6. 创建子进程
-        pid_t pid = fork();
-
-        if (pid < 0) {
-            perror("fork failed");
-            continue;
-        }
-
-        if (pid == 0) {
-            // 子进程
-
-            // 7. 如果有 >，做 stdout 重定向
-            if (redirect_index != -1) {
-                string filename = tokens[redirect_index + 1];
-
-                int fd = open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                if (fd < 0) {
-                    perror("open failed");
-                    exit(1);
-                }
-
-                if (dup2(fd, STDOUT_FILENO) < 0) {
-                    perror("dup2 failed");
-                    close(fd);
-                    exit(1);
-                }
-
-                close(fd);
-            }
-
-            execvp(args[0], args.data());
-            perror("exec failed");
-            exit(1);
+            execute_pipe(left_tokens, right_tokens);
         } else {
-            // 父进程等待子进程结束
-            waitpid(pid, nullptr, 0);
+            execute_command(tokens);
         }
     }
 
