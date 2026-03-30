@@ -54,6 +54,10 @@ mini-shell/
 └── README.md
 ```
 
+## Architecture
+
+![architecture](./assets/architecture.png)
+
 ---
 
 ## Core System Calls
