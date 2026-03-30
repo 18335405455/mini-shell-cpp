@@ -1,4 +1,3 @@
-````markdown
 # Mini Shell C++
 
 A Linux mini shell built with C++ using core Unix system calls.
@@ -7,22 +6,22 @@ A Linux mini shell built with C++ using core Unix system calls.
 
 ## Features
 
-- Built-in commands: `cd`, `exit`
-- External command execution via `fork + execvp`
-- Parent-child synchronization using `waitpid`
-- Input redirection `<`
-- Output redirection `>`
-- Single pipe `|` support
-- Linux file descriptor control via `dup2`
+* Built-in commands: `cd`, `exit`
+* External command execution via `fork + execvp`
+* Parent-child synchronization using `waitpid`
+* Input redirection `<`
+* Output redirection `>`
+* Single pipe `|` support
+* Linux file descriptor control via `dup2`
 
 ---
 
 ## Tech Stack
 
-- C++
-- Linux (WSL Ubuntu)
-- g++
-- Git / GitHub
+* C++
+* Linux (WSL Ubuntu)
+* g++
+* Git / GitHub
 
 ---
 
@@ -34,7 +33,7 @@ cat < out.txt
 echo hello | wc -c
 cd ..
 pwd
-````
+```
 
 ---
 
@@ -82,6 +81,3 @@ Modularized mini shell with support for input/output redirection and single pipe
 * Command history
 * Better syntax parsing
 * Mixed pipe and redirection support
-
-```
-```
