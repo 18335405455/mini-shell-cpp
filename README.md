@@ -1,94 +1,116 @@
-# MINI SHELL C++ × Web Playground
+# 💻 MINI SHELL C++ × Web Playground
 
-A modular Linux mini shell built with C++ using core Unix system calls, upgraded with a Next.js interactive web playground for real-time command execution demos.
+> **A modular Unix-style mini shell built with C++ and productized through a Next.js interactive browser playground.**
 
-## Project Overview
+This project transforms classic **Unix process control concepts** into a **portfolio-ready interactive developer tool**, allowing users to execute real shell commands directly from a browser UI powered by a custom C++ shell backend.
 
-This project implements a custom Unix-style mini shell in C++ and exposes it through a web-based interactive playground.
+It bridges:
 
-The web UI sends commands to a Next.js API route, which spawns the compiled `mini_shell` executable and returns the output back to the browser.
+> **System Programming × Full-Stack Product Engineering × Interactive Demo Experience**
 
-## Execution Flow
+---
+
+## 🚀 Project Overview
+
+This project implements a custom Linux-style mini shell in **modern C++**, supporting:
+
+- built-in commands
+- external command execution
+- input/output redirection
+- single pipe IPC
+- error rendering
+- browser-based interactive execution
+
+Unlike a traditional terminal-only shell assignment, this project exposes the shell through a **Next.js web playground**, making low-level OS concepts directly explorable through a polished terminal-style product interface.
+
+The browser UI sends commands to a **Next.js API route**, which spawns the compiled `mini_shell` executable and streams the result back into the browser terminal.
+
+---
+
+## 📸 System Preview
+
+### 1) Product Hero Overview
+![Hero Overview](./assets/01-hero-overview.png)
+
+### 2) Terminal Initial Ready State
+![Terminal Initial State](./assets/02-terminal-initial-state.png)
+
+### 3) Basic Command Execution
+![Basic Command Execution](./assets/03-basic-command-execution.png)
+
+### 4) Advanced Shell Features
+> Redirection · Pipe · Error Output · File Reading
+![Advanced Shell Features](./assets/04-advanced-shell-features.png)
+
+### 5) System Architecture
+![System Architecture](./assets/05-system-architecture.png)
+
+---
+
+## 🧠 Execution Flow
 
 ```text
-Web UI (Next.js)
+Browser UI (Next.js)
    ↓
 API Route (/api/execute)
    ↓
 spawn ./mini_shell
    ↓
-C++ parser / executor / pipe executor
+C++ parser / dispatcher
+   ↓
+normal executor / redirection executor / pipe executor
    ↓
 stdout / stderr
    ↓
-Browser terminal panel
+browser terminal panel
 ```
 
-## Core Features
+---
 
-### Shell Core (C++)
+## ✨ Core Engineering Highlights
+
+### ⚙️ Shell Core (C++)
 - Built-in commands: `cd`, `exit`
-- External command execution via `fork + execvp`
-- Parent-child synchronization using `waitpid`
+- External execution via `fork() + execvp()`
+- Parent-child synchronization using `waitpid()`
 - Input redirection `<`
 - Output redirection `>`
 - Single pipe `|`
-- Linux file descriptor control via `dup2`
+- File descriptor control with `dup2()`
 - Error propagation through `stderr`
+- Modular parser / executor / pipe architecture
 
-### Web Playground (Next.js)
+### 🌐 Web Playground (Next.js)
 - Interactive terminal-style UI
-- Real command execution through the custom C++ shell
+- Real command execution via custom C++ shell
 - Auto-scroll command history
-- Colored error output rendering
+- Colored stderr rendering
 - Browser-based demo environment
 - Stateless API execution architecture
+- Quick command action buttons
+- Product-style terminal UX
 
-## Tech Stack
+---
+
+## 🛠️ Tech Stack
 
 ### System Layer
-- C++
-- Linux / WSL Ubuntu
-- g++
-- Unix system calls
-- Makefile
+- **C++**
+- **Linux / WSL Ubuntu**
+- **g++**
+- **Unix system calls**
+- **Makefile**
 
 ### Web Layer
-- Next.js
-- React
-- TypeScript
-- Next API Routes
-- Node.js `spawn()`
+- **Next.js**
+- **React**
+- **TypeScript**
+- **Next API Routes**
+- **Node.js `spawn()`**
 
-## Demo Scenarios
+---
 
-### Basic Command Execution
-- `ls`
-- `pwd`
-- `echo hello`
-- `cat README.md`
-
-### Redirection
-
-```bash
-echo hello > out.txt
-cat < out.txt
-```
-
-### Pipe
-
-```bash
-echo hello | wc -c
-```
-
-### Error Output
-
-```bash
-not_a_command
-cat not_exist.txt
-```
-
-## Project Structure
+## 📂 Project Structure
 
 ```text
 mini-shell/
@@ -107,11 +129,18 @@ mini-shell/
 │   │   └── api/execute/route.ts
 │   └── package.json
 ├── assets/
+│   ├── 01-hero-overview.png
+│   ├── 02-terminal-initial-state.png
+│   ├── 03-basic-command-execution.png
+│   ├── 04-advanced-shell-features.png
+│   └── 05-system-architecture.png
 ├── Makefile
 └── README.md
 ```
 
-## Core System Calls
+---
+
+## 🔧 Core Unix System Calls
 
 - `fork()`
 - `execvp()`
@@ -121,34 +150,51 @@ mini-shell/
 - `open()`
 - `chdir()`
 
-## Current Milestone
+These APIs form the foundation of:
 
-A functional C++ mini shell plus web playground prototype supporting:
-- built-in commands
-- external commands
-- input/output redirection
-- single pipe execution
-- real error rendering
-- browser-based interactive execution
+> **process creation · IPC · file descriptor routing · shell execution flow**
 
-## Future Improvements
+---
+
+## 🎯 Why This Project Stands Out
+
+This is not just a shell assignment.
+
+It productizes **Unix systems programming fundamentals** into a **browser-executable engineering showcase**, allowing interviewers and collaborators to directly explore:
+
+- process creation
+- command parsing
+- file descriptor control
+- pipe-based IPC
+- stderr failure paths
+- full-stack product integration
+
+This significantly improves the **demonstrability and interview value** of classic OS projects.
+
+---
+
+## 🚀 Future Improvements
 
 - Multiple pipe support (`cmd1 | cmd2 | cmd3`)
-- Persistent session shell state
 - Background job execution (`&`)
+- Persistent session shell state
 - Command history persistence
 - Better syntax parsing
-- Mixed pipe and redirection support
-- WebSocket-based long-lived shell process
+- Mixed pipe + redirection
+- WebSocket-based long-lived shell runtime
+- Session-isolated shell containers
 
-## Why This Project Matters
+---
 
-This project bridges system programming and interactive web demonstration.
+## 💼 Best Fit Roles
 
-It transforms a traditional Unix systems project into a portfolio-ready engineering showcase, making the shell logic directly explorable through a browser.
+This project is especially suitable for:
 
-Suitable for:
-- systems internships
-- backend engineering roles
-- AI infra / platform roles
-- Unix process control demos
+- **Systems Engineering Internships**
+- **Backend Engineering**
+- **AI Infra / Platform Engineering**
+- **Distributed Systems Foundations**
+- **Unix Process Control Demonstrations**
+- **Remote Full-Stack Engineering**
+
+---
